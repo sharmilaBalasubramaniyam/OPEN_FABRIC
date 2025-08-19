@@ -3,26 +3,26 @@
 End-to-end, ready-to-run solution for the take-home exercise.
 Provides <100 ms API responses, zero data loss, and no duplicate transactions, even when the downstream posting service is slow and unreliable.
 
-Overview
+## Overview
 
 This service acts as a reliable intermediary between clients and a slow, unreliable mock posting service.
 It ensures high performance, fault tolerance, idempotency, and deduplication under heavy transaction loads.
 
-Features
+## Features
 
-<100 ms response on transaction submission
+1. <100 ms response on transaction submission
 
-Reliable queueing with Redis
+2. Reliable queueing with Redis
 
-Zero data loss & deduplication using GET verification
+3. Zero data loss & deduplication using GET verification
 
-Retry logic for failures (pre-write & post-write)
+4. Retry logic for failures (pre-write & post-write)
 
-Health monitoring (queue depth, error rate, uptime)
+5. Health monitoring (queue depth, error rate, uptime)
 
-Load testing with automated script (test.py)
+6. Load testing with automated script (test.py)
 
-System Architecture
+## System Architecture
 
 API Layer (FastAPI) – accepts client requests, responds immediately
 
@@ -34,19 +34,21 @@ Mock Posting Service – slow, unreliable downstream (provided via Docker)
 
 State Store – keeps transaction status (pending, processing, completed, failed)
 
-Prerequisites
+## Prerequisites
 
-Python 3.9+
+1. Python 3.9+
 
 pip (Python package manager)
 
-Docker (for Redis + Mock Posting Service)
+2. Docker (for Redis + Mock Posting Service)
 
-Git (to clone repository)
+3. Git (to clone repository)
 
-Setup & Installation
+## Setup & Installation
+
 # Setup environment
 python -m venv venv
+
 # Windows: venv\Scripts\activate
 # macOS/Linux: source venv/bin/activate
 
@@ -63,20 +65,21 @@ docker run -d --name mock-posting -p 8080:8080 vinhopenfabric/mock-posting-servi
 uvicorn main:app --host 0.0.0.0 --port 3000 --reload
 # API is now available at http://localhost:3000
 
-API Endpoints
-POST /api/transactions
+## API Endpoints
+
+# POST /api/transactions
 
 Submit a new transaction. Returns immediately (≈<100 ms).
 
-GET /api/transactions/{id}
+# GET /api/transactions/{id}
 
 Check transaction status (pending, processing, completed, failed).
 
-GET /api/health
+# GET /api/health
 
 Returns system health, queue depth, error rate, uptime.
 
-How the System Works
+## How the System Works
 
 Transaction submitted → immediately enqueued (status pending)
 
@@ -88,23 +91,11 @@ If failure → retries based on type (pre-write/post-write)
 
 Status updated (completed or failed)
 
-Load Testing
+## Load Testing
 python test.py
 
 
-This script:
-
-Sends transactions in batches (warm-up, performance, stress)
-
-Measures latency, TPS, error rate
-
-Verifies no duplicates
-
-Monitoring
-curl http://localhost:3000/api/health
-
-
-Example:
+## Example:
 
 {
   "status": "OK",
@@ -113,7 +104,8 @@ Example:
   "uptime": 250
 }
 
-Folder Structure
+## Folder Structure
+
 OPEN_FABRIC
 │
 ├── main.py              # FastAPI app + worker logic
@@ -123,7 +115,7 @@ OPEN_FABRIC
 ├── README.md            # Documentation
 └── .gitignore
 
-Future Improvements
+## Future Improvements
 
 Prometheus + Grafana for real-time monitoring
 
