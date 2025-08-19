@@ -1,14 +1,14 @@
-High Performance Transaction Processing System (FastAPI + Redis + Mock Service)
+# High Performance Transaction Processing System (FastAPI + Redis + Mock Service)
 
 An end-to-end, ready-to-run solution for the take-home exercise.
 Provides <100 ms API responses, zero data loss, and no duplicate transactions even when the downstream posting service is slow and unreliable.
 
-Overview
+# Overview
 
 This system acts as a reliable intermediary between clients and a slow, unreliable mock posting service.
 It ensures high performance, fault tolerance, idempotency, and deduplication under heavy transaction loads.
 
-Features
+# Features
 
 <100 ms response on transaction submission
 
@@ -22,7 +22,7 @@ Health monitoring (queue depth, error rate, uptime)
 
 Load testing with automated script (test.py)
 
-System Architecture
+# System Architecture
 
 API Layer (FastAPI) – accepts client requests, responds immediately
 
@@ -34,7 +34,7 @@ Mock Posting Service – slow, unreliable downstream (Docker-provided)
 
 State Store – maintains transaction status (pending, processing, completed, failed)
 
-Prerequisites
+# Prerequisites
 
 Python 3.9+ (with pip)
 
@@ -42,15 +42,18 @@ Docker (for Redis and Mock Posting Service)
 
 Git (to clone repository)
 
-Setup & Installation
+# Setup & Installation
+
 # Clone repository
 git clone <repo-url>
 cd OPEN_FABRIC
 
 # Create and activate virtual environment
 python -m venv venv
+
 # Windows
 venv\Scripts\activate
+
 # macOS/Linux
 source venv/bin/activate
 
