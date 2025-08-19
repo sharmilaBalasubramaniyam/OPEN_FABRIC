@@ -44,13 +44,13 @@ pip (Python package manager)
 
 3. Git (to clone repository)
 
-## Setup & Installation
+# Setup & Installation
 
 # Setup environment
 python -m venv venv
 
-# Windows: venv\Scripts\activate
-# macOS/Linux: source venv/bin/activate
+ Windows: venv\Scripts\activate
+ macOS/Linux: source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -63,23 +63,23 @@ docker run -d --name mock-posting -p 8080:8080 vinhopenfabric/mock-posting-servi
 
 # Run FastAPI server
 uvicorn main:app --host 0.0.0.0 --port 3000 --reload
-# API is now available at http://localhost:3000
+API is now available at http://localhost:3000
 
 ## API Endpoints
 
-# POST /api/transactions
+1. POST /api/transactions
 
-Submit a new transaction. Returns immediately (≈<100 ms).
+  Submit a new transaction. Returns immediately (≈<100 ms).
 
-# GET /api/transactions/{id}
+2. GET /api/transactions/{id}
 
 Check transaction status (pending, processing, completed, failed).
 
-# GET /api/health
+3. GET /api/health
 
 Returns system health, queue depth, error rate, uptime.
 
-## How the System Works
+# How the System Works
 
 Transaction submitted → immediately enqueued (status pending)
 
@@ -94,7 +94,6 @@ Status updated (completed or failed)
 ## Load Testing
 python test.py
 
-
 ## Example:
 
 {
@@ -108,11 +107,16 @@ python test.py
 
 OPEN_FABRIC
 │
-├── main.py              # FastAPI app + worker logic
+├── main.py  # FastAPI app + worker logic
+
 ├── test.py              # Load testing script
+
 ├── index.html           # Simple test client
+
 ├── requirements.txt     # Python dependencies
+
 ├── README.md            # Documentation
+
 └── .gitignore
 
 ## Future Improvements
