@@ -1,94 +1,100 @@
-# High Performance Transaction Processing System (FastAPI + Redis + Mock Service)
+## High Performance Transaction Processing System (FastAPI + Redis + Mock Service)
 
-An end-to-end, ready-to-run solution for the take-home exercise.
-Provides <100 ms API responses, zero data loss, and no duplicate transactions even when the downstream posting service is slow and unreliable.
+End-to-end, ready-to-run solution for the take-home exercise.
+Provides <100 ms API responses, zero data loss, and no duplicate transactions, even when the downstream posting service is slow and unreliable.
 
-# Overview
+## Overview
 
-This system acts as a reliable intermediary between clients and a slow, unreliable mock posting service.
+This service acts as a reliable intermediary between clients and a slow, unreliable mock posting service.
 It ensures high performance, fault tolerance, idempotency, and deduplication under heavy transaction loads.
 
-# Features
+## Features
 
-<100 ms response on transaction submission
+1. <100 ms response on transaction submission
 
-Reliable queueing with Redis
+2. Reliable queueing with Redis
 
-Zero data loss and deduplication using GET verification
+3. Zero data loss & deduplication using GET verification
 
-Retry logic for failures (pre-write and post-write)
+4. Retry logic for failures (pre-write & post-write)
 
-Health monitoring (queue depth, error rate, uptime)
+5. Health monitoring (queue depth, error rate, uptime)
 
-Load testing with automated script (test.py)
+6. Load testing with automated script (test.py)
 
-# System Architecture
+## System Architecture
 
 API Layer (FastAPI) – accepts client requests, responds immediately
 
-Queue (Redis) – stores transactions for asynchronous processing
+Queue (Redis) – stores transactions for async processing
 
 Worker Pool – processes queued transactions, retries failures
 
-Mock Posting Service – slow, unreliable downstream (Docker-provided)
+Mock Posting Service – slow, unreliable downstream (provided via Docker)
 
-State Store – maintains transaction status (pending, processing, completed, failed)
+State Store – keeps transaction status (pending, processing, completed, failed)
 
-# Prerequisites
+## Prerequisites
 
-Python 3.9+ (with pip)
+1. Python 3.9+
 
-Docker (for Redis and Mock Posting Service)
+   pip (Python package manager)
 
-Git (to clone repository)
+2. Docker (for Redis + Mock Posting Service)
+
+3. Git (to clone repository)
 
 # Setup & Installation
 
-# Clone repository
-git clone <repo-url>
-cd OPEN_FABRIC
-
-# Create and activate virtual environment
+# Setup environment
 python -m venv venv
 
-# Windows
-venv\Scripts\activate
-
-# macOS/Linux
-source venv/bin/activate
+ Windows: venv\Scripts\activate
+ macOS/Linux: source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
 
-Start Services
 # Start Redis
 docker run -d --name redis -p 6379:6379 redis
 
-# Start Mock Posting Service
+# Start mock posting service
 docker run -d --name mock-posting -p 8080:8080 vinhopenfabric/mock-posting-service:latest
 
-Run API Server
+# Run FastAPI server
 uvicorn main:app --host 0.0.0.0 --port 3000 --reload
+API is now available at http://localhost:3000
 
+## API Endpoints
 
-API available at: http://localhost:3000
+1. POST /api/transactions
 
-API Endpoints
-1. Submit Transaction
+   Submit a new transaction. Returns immediately (≈<100 ms).
 
-POST /api/transactions
-Returns immediately (<100 ms).
+2. GET /api/transactions/{id}
 
-2. Get Transaction Status
+   Check transaction status (pending, processing, completed, failed).
 
-GET /api/transactions/{id}
-Statuses: pending, processing, completed, failed.
+3. GET /api/health
 
-3. Health Check
+   Returns system health, queue depth, error rate, uptime.
 
-GET /api/health
-Returns system health info.
-Example response:
+# How the System Works
+
+Transaction submitted → immediately enqueued (status pending)
+
+Worker picks it up → checks posting service for existence
+
+If not exists → POST to mock service
+
+If failure → retries based on type (pre-write/post-write)
+
+Status updated (completed or failed)
+
+## Load Testing
+python test.py
+
+## Example:
 
 {
   "status": "OK",
@@ -97,26 +103,30 @@ Example response:
   "uptime": 250
 }
 
-How It Works
+## Folder Structure
 
-Client submits transaction → enqueued immediately (status: pending)
-
-Worker picks transaction → checks posting service for existence
-
-If not exists → POST to mock service
-
-On failure → retry with pre/post-write logic
-
-Status updated → completed or failed
-
-Load Testing
-python test.py
-
-Folder Structure
 OPEN_FABRIC
-│── main.py           # FastAPI app + worker logic
-│── test.py           # Load testing script
-│── index.html        # Simple test client
-│── requirements.txt  # Python dependencies
-│── README.md         # Documentation
+│
+├── main.py  # FastAPI app + worker logic
+
+├── test.py              # Load testing script
+
+├── index.html           # Simple test client
+
+├── requirements.txt     # Python dependencies
+
+├── README.md            # Documentation
+
 └── .gitignore
+
+## Future Improvements
+
+Prometheus + Grafana for real-time monitoring
+
+Circuit breaker for downstream outages
+
+Rate limiting for overload protection
+
+PostgreSQL storage for persistence
+
+Horizontal scaling of workers
