@@ -38,7 +38,7 @@ State Store – keeps transaction status (pending, processing, completed, failed
 
 1. Python 3.9+
 
-pip (Python package manager)
+   pip (Python package manager)
 
 2. Docker (for Redis + Mock Posting Service)
 
@@ -69,15 +69,15 @@ API is now available at http://localhost:3000
 
 1. POST /api/transactions
 
-  Submit a new transaction. Returns immediately (≈<100 ms).
+   Submit a new transaction. Returns immediately (≈<100 ms).
 
 2. GET /api/transactions/{id}
 
-Check transaction status (pending, processing, completed, failed).
+   Check transaction status (pending, processing, completed, failed).
 
 3. GET /api/health
 
-Returns system health, queue depth, error rate, uptime.
+   Returns system health, queue depth, error rate, uptime.
 
 # How the System Works
 
